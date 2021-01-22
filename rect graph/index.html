@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>矩阵图</title>
+		<script src="https://d3js.org/d3.v5.min.js" charset="UTF-8"></script>
+	</head>
+	<body>
+		
+		<div class="svg" id="treemap"></div>
+		
+		<script>
+			var dataset={
+				"name": "中国",
+				  "children":
+				      [
+				        {
+				          "name": "浙江",
+				          "children":
+				              [
+				                {"name":"杭州", "gdp":8343},
+				                {"name":"宁波", "gdp":7128},
+				                {"name":"温州", "gdp":4003},
+				                {"name":"绍兴", "gdp":3620},
+				                {"name":"湖州", "gdp":1803},
+				                {"name":"嘉兴", "gdp":3147},
+				                {"name":"金华", "gdp":2958},
+				                {"name":"衢州", "gdp":1056},
+				                {"name":"舟山", "gdp":1021},
+				                {"name":"台州", "gdp":3153},
+				                {"name":"丽水", "gdp":983}
+				              ]
+				        },
+				        {
+				          "name": "广东",
+				          "children":
+				              [
+				                {"name":"杭州", "gdp":8343},
+				                {"name":"宁波", "gdp":7128},
+				                {"name":"温州", "gdp":4003},
+				                {"name":"绍兴", "gdp":3620},
+				                {"name":"湖州", "gdp":1803},
+				                {"name":"嘉兴", "gdp":3147},
+				                {"name":"金华", "gdp":2958},
+				                {"name":"衢州", "gdp":1056},
+				                {"name":"舟山", "gdp":1021},
+				                {"name":"台州", "gdp":3153},
+				                {"name":"丽水", "gdp":983}
+				              ]
+				        },
+				        {
+				          "name": "福建",
+				          "children":
+				              [
+				                {"name":"杭州", "gdp":8343},
+				                {"name":"宁波", "gdp":7128},
+				                {"name":"温州", "gdp":4003},
+				                {"name":"绍兴", "gdp":3620},
+				                {"name":"湖州", "gdp":1803},
+				                {"name":"嘉兴", "gdp":3147},
+				                {"name":"金华", "gdp":2958},
+				                {"name":"衢州", "gdp":1056},
+				                {"name":"舟山", "gdp":1021},
+				                {"name":"台州", "gdp":3153},
+				                {"name":"丽水", "gdp":983}
+				              ]
+				        }
+				      ]
+
+			};
+			
+			var width=3000;
+			var height=3000;
+			var treemap=d3.treemap().size([width,height]);
+			
+			var colorScale=d3.scaleOrdinal(d3.schemeCategory10);
+			
+			var root=d3.hierarchy(dataset).sum(function(d){
+				return d.gdp;
+			});
+			
+			
+			var tree=treemap(root);
+			
+			//将生成的树形结构转换为叶子节点数组
+			var leaves=tree.leaves();
+	        console.log(leaves);		
+			
+			//用叶子节点数组绘图
+			var svg=d3.select("#treemap").append("svg").attr("width",width).attr("height",height);
+			
+			var g=svg.selectAll(".rects").data(leaves).enter().append("g").attr('class','rects');
+			
+				
+			//添加矩阵
+			g.append('rect').attr("x",function(d){return d.x0}).attr("y",function(d){return d.y0;}).attr("width",function(d){return d.x1-d.x0;}).attr("height",function(d){return d.y1-d.y0;}).style("fill",function(d){
+				return colorScale(d.parent.data.name);
+			}).style("stroke","#ccccccc");
+			
+			//添加描述
+			
+			      g.append('text')
+			        .attr('x', (d) => (d.x1 - d.x0) / 2 + d.x0)
+			        .attr('y', (d) => (d.y1 - d.y0) / 2 + d.y0)
+			        .attr('dx', (d) => { return -d.data.name.length / 2 + 'em' })
+			        .attr('dy', (d) => { return '-0.5em' })
+			        .text((d) => { return d.data.name })
+			        .attr('font-size', (d) => { return 14 - d.depth + 'px' })
+			        .attr('fill', '#f0f0f0')
+			      g.append('text')
+			        .attr('x', (d) => (d.x1 - d.x0) / 2 + d.x0)
+			        .attr('y', (d) => (d.y1 - d.y0) / 2 + d.y0)
+			        .attr('dx', (d) => { return -(d.value.toString().length + 2) / 4 + 'em' })
+			        .attr('dy', (d) => { return '1em' })
+			        .text((d) => { return '(' + d.value + ')' })
+			        .attr('font-size', (d) => { return 14 - d.depth + 'px' })
+			        .attr('fill', '#ffffff')
+		</script>
+	</body>
+	
+	
+	<style>
+		#svgContainer{
+			width: 100%;
+			height: 100%;
+		}
+		.svg{
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+</html>

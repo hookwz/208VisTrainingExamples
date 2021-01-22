@@ -1,0 +1,24 @@
+.bar{
+    fill: rgb(0, 183, 255);
+    stroke: blue;
+    stroke-width: 2;
+}
+.bar:hover{
+    fill:green;
+}
+.tex{
+    fill:white;
+    font-family: sans-serif;
+}
+.xAxis path,
+.xAxis line{
+    fill:none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.xAxis text{
+    font-family: sans-serif;
+    font-size: 11px;
+}
+
